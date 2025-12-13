@@ -6,7 +6,7 @@
 class Shape {
 public:
     float speed;
-    float visibleRadius;
+    float visionRadius;
     float detectArea;
 };
 

@@ -1,20 +1,24 @@
 #include "./class/circle.hpp"
 
-Circle::Circle(float initX, float initY, float speed, float visibleRadius, sf::Color color) {
+Circle::Circle(float initX, float initY, float speed, float radius, float visionRadius, sf::Color color) {
     this->speed = speed;
-    this->visibleRadius = visibleRadius;
+    this->visionRadius = visionRadius;
+
     circle.setPosition({initX, initY});
-    circle.setRadius(visibleRadius/2);
+    circle.setRadius(radius);
+    circle.setOrigin({radius, radius});
     circle.setFillColor(color);
-    makeVisionCircle();
+
+    makeVisionCircle(initX, initY);
 }
 
-void Circle::makeVisionCircle() {
-    sf::Vector2f pos = circle.getPosition();
-    visionCircle.setRadius(visibleRadius);
-    visionCircle.setFillColor(sf::Color::White);
-    visionCircle.setPosition({pos.x, pos.y});
-
+void Circle::makeVisionCircle(float initX, float initY) {
+    visionCircle.setPosition({initX, initY});
+    visionCircle.setRadius(visionRadius);
+    visionCircle.setOrigin({visionRadius, visionRadius});
+    visionCircle.setFillColor(sf::Color::Transparent);
+    visionCircle.setOutlineThickness(2.f);
+    visionCircle.setOutlineColor(sf::Color::White);
 }
 
 void Circle::arrKeyControl() {

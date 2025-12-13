@@ -8,9 +8,9 @@ public:
     sf::CircleShape circle;
     sf::CircleShape visionCircle;
 
-    Circle(float initX, float initY, float speed, float visionRadius, sf::Color color);
+    Circle(float initX, float initY, float speed, float radius, float visionRadius, sf::Color color);
     
-    void makeVisionCircle();
+    void makeVisionCircle(float x, float y);
     void arrKeyControl();
     void charKeyControl();
 

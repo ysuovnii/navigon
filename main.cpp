@@ -6,7 +6,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "Navigon");
     window.setFramerateLimit(FPS);
 
-    Circle main(100, 100, 1, 50, sf::Color::Red);
+    Circle main(100, 100, 10, 25, 100, sf::Color::Red);
 
     while(window.isOpen()) {
         while(std::optional event = window.pollEvent()) {
