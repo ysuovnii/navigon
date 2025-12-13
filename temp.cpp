@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <bits/stdc++.h>
 
-
-bool circleRectCollision(const sf::Vector2f& cPos, float radius, const sf::FloatRect& rect) {
-    float left   = rect.position.x;
-    float top    = rect.position.y;
-    float right  = rect.position.x + rect.size.x;
+bool circleRectCollision(const sf::Vector2f &cPos, float radius, const sf::FloatRect &rect)
+{
+    float left = rect.position.x;
+    float top = rect.position.y;
+    float right = rect.position.x + rect.size.x;
     float bottom = rect.position.y + rect.size.y;
 
     float closestX = std::clamp(cPos.x, left, right);
@@ -17,7 +17,38 @@ bool circleRectCollision(const sf::Vector2f& cPos, float radius, const sf::Float
     return (dx * dx + dy * dy) < (radius * radius);
 }
 
-int main() {
+void makeRing(
+    std::vector<sf::RectangleShape> &walls,
+    sf::Vector2f center,
+    float radius,
+    float thickness,
+    int segments,
+    const std::set<int> &gaps)
+{
+    constexpr float PI = 3.14159265359f;
+    float angleStep = 2.f * PI / segments;
+
+    for (int i = 0; i < segments; i++)
+    {
+        if (gaps.count(i))
+            continue;
+
+        float angle = i * angleStep;
+
+        sf::RectangleShape wall;
+        wall.setSize({radius * angleStep, thickness});
+        wall.setOrigin({0.f, thickness / 2.f});
+        wall.setPosition({center.x + std::cos(angle) * radius,
+                          center.y + std::sin(angle) * radius});
+        wall.setRotation(sf::degrees(angle * 180.f / PI));
+        wall.setFillColor(sf::Color::White);
+
+        walls.push_back(wall);
+    }
+}
+
+int main()
+{
     sf::RenderWindow window(sf::VideoMode({800, 800}), "Navigon");
     window.setFramerateLimit(120);
 
@@ -26,35 +57,28 @@ int main() {
 
     sf::CircleShape player(25.f);
     player.setOrigin({25.f, 25.f});
+    player.setRadius(10);
     player.setFillColor(sf::Color::Red);
-    player.setPosition({200.f, 200.f});
-
     float playerSpeed = 250.f;
 
     std::vector<sf::RectangleShape> walls;
 
-    auto makeWall = [&](sf::Vector2f size, sf::Vector2f pos) {
-        sf::RectangleShape wall(size);
-        wall.setPosition(pos);
-        wall.setFillColor(sf::Color::White);
-        walls.push_back(wall);
-    };
+    sf::Vector2f mazeCenter(1000.f, 1000.f);
 
+    makeRing(walls, mazeCenter, 800.f, 10.f, 90, {5, 30});
+    makeRing(walls, mazeCenter, 650.f, 10.f, 80, {12, 40});
+    makeRing(walls, mazeCenter, 500.f, 10.f, 70, {18, 55});
+    makeRing(walls, mazeCenter, 350.f, 10.f, 60, {10, 35});
+    makeRing(walls, mazeCenter, 200.f, 10.f, 50, {22});
 
-    makeWall({600.f, 6.f}, {100.f, 100.f});
-    makeWall({600.f, 6.f}, {100.f, 700.f});
-    makeWall({6.f, 600.f}, {100.f, 100.f});
-    makeWall({6.f, 600.f}, {700.f, 100.f});
-
-    makeWall({300.f, 6.f}, {150.f, 250.f});
-    makeWall({6.f, 300.f}, {450.f, 250.f});
-    makeWall({250.f, 6.f}, {200.f, 450.f});
-
+    player.setPosition({900, 900});
 
     sf::Clock clock;
 
-    while (window.isOpen()) {
-        while (auto event = window.pollEvent()) {
+    while (window.isOpen())
+    {
+        while (std::optional event = window.pollEvent())
+        {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
@@ -62,52 +86,50 @@ int main() {
         float dt = clock.restart().asSeconds();
 
         sf::Vector2f movement(0.f, 0.f);
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) movement.y -= playerSpeed;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) movement.y += playerSpeed;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) movement.x -= playerSpeed;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) movement.x += playerSpeed;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+            movement.y -= playerSpeed;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+            movement.y += playerSpeed;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+            movement.x -= playerSpeed;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+            movement.x += playerSpeed;
 
         sf::Vector2f nextPosX = player.getPosition() + sf::Vector2f(movement.x * dt, 0.f);
         bool blockX = false;
-
-        for (auto& wall : walls) {
-            if (circleRectCollision(nextPosX, player.getRadius(), wall.getGlobalBounds())) {
+        for (auto &wall : walls)
+        {
+            if (circleRectCollision(nextPosX, player.getRadius(), wall.getGlobalBounds()))
+            {
                 blockX = true;
                 break;
             }
         }
-
         if (!blockX)
             player.setPosition(nextPosX);
 
         sf::Vector2f nextPosY = player.getPosition() + sf::Vector2f(0.f, movement.y * dt);
         bool blockY = false;
-
-        for (const auto& wall : walls) {
-            if (circleRectCollision(nextPosY, player.getRadius(), wall.getGlobalBounds())) {
+        for (auto &wall : walls)
+        {
+            if (circleRectCollision(nextPosY, player.getRadius(), wall.getGlobalBounds()))
+            {
                 blockY = true;
                 break;
             }
         }
-
         if (!blockY)
             player.setPosition(nextPosY);
 
         sf::Vector2f camPos = camera.getCenter();
         sf::Vector2f target = player.getPosition();
-
         camPos += (target - camPos) * 6.f * dt;
         camera.setCenter(camPos);
-
         window.setView(camera);
 
-
         window.clear(sf::Color::Black);
-
-        for (const auto& wall : walls)
+        for (const auto &wall : walls)
             window.draw(wall);
-
         window.draw(player);
         window.display();
     }
