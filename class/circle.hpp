@@ -6,11 +6,16 @@
 class Circle : Shape {
 public: 
     sf::CircleShape circle;
-    Circle(float speed, float visibleArea);
+    sf::CircleShape visionCircle;
+
+    Circle(float initX, float initY, float speed, float visionRadius, sf::Color color);
+    
+    void makeVisionCircle();
     void arrKeyControl();
     void charKeyControl();
+
     void enemyCollision();
-    void isInvisible(); // power
+    void isInvisible(); 
 };
 
 #endif

@@ -1,21 +1,24 @@
-#include "config.hpp"
-#include "shape.hpp"
-#include "circle.hpp"
+#include "./class/config.hpp"
+#include "./class/shape.hpp"
+#include "./class/circle.hpp"
 
 int main() { 
     sf::RenderWindow window(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "Navigon");
     window.setFramerateLimit(FPS);
 
+    Circle main(100, 100, 1, 50, sf::Color::Red);
 
     while(window.isOpen()) {
         while(std::optional event = window.pollEvent()) {
             if(event->is<sf::Event::Closed>()) window.close();
         }
 
+        main.charKeyControl();
 
 
-
-        window.clear();
+        window.clear(sf::Color::Black);
+        window.draw(main.visionCircle);
+        window.draw(main.circle);
         window.display();
     }
 
