@@ -61,5 +61,15 @@ void Map::draw(sf::RenderWindow& window) {
     }
 }
 
+bool Map::isWallAtPixel(float px, float py) {
+    int x = static_cast<int>(px) / tileSize;
+    int y = static_cast<int>(py) / tileSize;
+
+    if (x < 0 || y < 0 || x >= width || y >= height)
+        return true;
+
+    return grid[y][x] == 1;
+}
+
 
 

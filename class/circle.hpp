@@ -12,7 +12,7 @@ public:
     
     void makeVisionCircle(float x, float y);
     void arrKeyControl();
-    void charKeyControl();
+    void charKeyControl(sf::Vector2f& move);
 
     void enemyCollision();
     void isInvisible(); 

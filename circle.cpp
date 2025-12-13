@@ -40,21 +40,13 @@ void Circle::arrKeyControl() {
     } 
 }
 
-void Circle::charKeyControl() { 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-        circle.move({0, -speed});
-        visionCircle.move({0, -speed});
-    } 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        circle.move({-speed, 0});
-        visionCircle.move({-speed, 0});
-    } 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-        circle.move({0, speed});
-        visionCircle.move({0, speed});
-    } 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        circle.move({speed, 0});
-        visionCircle.move({speed, 0});
-    } 
+void Circle::charKeyControl(sf::Vector2f& move) {
+    move.x = 0.f;
+    move.y = 0.f;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) move.y -= speed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) move.y += speed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) move.x -= speed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) move.x += speed;
 }
+

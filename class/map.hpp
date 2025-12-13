@@ -11,6 +11,7 @@ public:
     void generateMaze();          
     void draw(sf::RenderWindow& window);
     bool isWall(float x, float y) ;
+    bool isWallAtPixel(float px, float py);
 
 private:
     float width;
