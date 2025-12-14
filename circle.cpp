@@ -13,31 +13,13 @@ Circle::Circle(float initX, float initY, float speed, float radius, float vision
 }
 
 void Circle::makeVisionCircle(float initX, float initY) {
+    
     visionCircle.setPosition({initX, initY});
     visionCircle.setRadius(visionRadius);
     visionCircle.setOrigin({visionRadius, visionRadius});
     visionCircle.setFillColor(sf::Color::Transparent);
     visionCircle.setOutlineThickness(2.f);
     visionCircle.setOutlineColor(sf::Color::White);
-}
-
-void Circle::arrKeyControl() {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-        circle.move({0, -speed});
-        visionCircle.move({0, -speed});
-    } 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-        circle.move({-speed, 0});
-        visionCircle.move({-speed, 0});
-    } 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-        circle.move({0, speed});
-        visionCircle.move({0, speed});
-    } 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-        circle.move({speed, 0});
-        circle.move({speed, 0});
-    } 
 }
 
 void Circle::charKeyControl(sf::Vector2f& move) {

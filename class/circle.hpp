@@ -1,12 +1,14 @@
 #ifndef CIRCLE_HPP 
 #define CIRCLE_HPP
 
-#include "shape.hpp"
+#include <SFML/Graphics.hpp>
 
-class Circle : Shape {
+class Circle {
 public: 
     sf::CircleShape circle;
     sf::CircleShape visionCircle;
+    float speed;
+    float visionRadius;
 
     Circle(float initX, float initY, float speed, float radius, float visionRadius, sf::Color color);
     
